@@ -1,24 +1,20 @@
-using PCEUncertainty
-
-function generate_collocation_points(N::Int)
-    # Get the nodes and weights for the quadrature rule
-    ortho_polynomials = GaussOrthoPoly(N)
-    nodes = ortho_polynomials.quad.nodes
-    weights = ortho_polynomials.quad.weights
+"""
+`generate_collocation` - compute the solution to the ODE for a set of collocation points in the probability space
+"""
+function generate_collocation(prob::StochasticODEProblem)
+    # Solve the ODE numerically at each of the collocation points over the probability space
     sols = []
-
-    # Solve the ODE numerically at the collocation points over the probability space
-    for i = 1:N
+    for i = 1:prob.collocation_size 
         # Set up the ODE
         f(u, p, t) = -p[1]*u
         u0 = 1.
-        tspan = (0., 1.)
-        p = nodes[i]
+        tspan = (0., prob.t_max)
+        p = prob.collocation_nodes[i]
 
         # Solve the ODE
-        prob = ODEProblem(f, u0, tspan, [p])
-        sol = solve(prob)
+        ODEprob = ODEProblem(f, u0, tspan, [p])
+        sol = solve(ODEprob)
         push!(sols, sol)
     end
-    return nodes, weights, sols
+    return sols
 end
