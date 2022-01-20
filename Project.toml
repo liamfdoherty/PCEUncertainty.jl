@@ -4,9 +4,11 @@ authors = ["Liam Doherty <lfd27@drexel.edu>"]
 version = "0.1.0"
 
 [deps]
+ClassicalOrthogonalPolynomials = "b30e2e7b-c4ee-47da-9d5f-2c5c27239acd"
 DataInterpolations = "82cc6244-b520-54b8-b5a6-8a565e85f1d0"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+FastGaussQuadrature = "442a2c76-b920-505d-bb47-c5924d526838"
 PolyChaos = "8d666b04-775d-5f6e-b778-5ac7c70f65a3"
 QuadGK = "1fd47b50-473d-5c70-9696-f719f8f3bcdc"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"

@@ -1,6 +1,7 @@
 using Distributions
 using Plots
 using PolyChaos
+using DataInterpolations
 using PCEUncertainty
 
 # Set up the problem data structure
@@ -16,7 +17,7 @@ for degree in 2:5
     subplot = plot(z_vals, truth.(z_vals), title = "N = $(degree)", label = "Truth")
 
     # Set up the problem with the given degree
-    basis_degree = degree; collocation_size = degree
+    basis_degree = degree; collocation_size = degree + 1
     prob = StochasticODEProblem(t_max, basis_type, basis_degree, collocation_size)
 
     # Compute and plot the collocation points
@@ -28,6 +29,9 @@ for degree in 2:5
     # Compute and plot the interpolant
     v̂ = generate_pce_coefficients(prob, end_states)
     Φⱼz = evaluate(z_vals, prob.basis)
+    for (n, column) in enumerate(1:size(Φⱼz)[2])
+        Φⱼz[:, column] = Φⱼz[:, column] ./ sqrt(factorial(n - 1))
+    end
     v = zeros(length(Φⱼz[:, 1]))
     for i in 1:prob.basis_degree + 1
         v .+= v̂[i] .* Φⱼz[:, i]
