@@ -4,14 +4,14 @@ using PCEUncertainty
 t_max = 1.
 basis_type = GaussOrthoPoly
 degrees = collect(2:11)
-
+ 
 # Compute the means and variances
 means = []; variances = []
 for degree in degrees
-    local basis_degree = degree; local collocation_size = degree + 1
-    local prob = StochasticODEProblem(t_max, basis_type, basis_degree, collocation_size)
+    local basis_degree = degree
+    local prob = StochasticODEProblem(t_max, basis_type, basis_degree)
     local sols = generate_collocation(prob)
-    local end_states = [sols[i].u[end] for i in 1:prob.collocation_size]
+    local end_states = [sols[i].u[end] for i in 1:length(prob.collocation_nodes)]
     local v̂ = generate_pce_coefficients(prob, end_states)
     
     # Add means

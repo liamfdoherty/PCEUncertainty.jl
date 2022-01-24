@@ -3,19 +3,20 @@
 
 Fields:
 `t_max` - end time for the ODE simulation
-`basis_type` - type of polynomials used in the PCE basis
-`basis_degree` - maximum degree of basis polynomials
 `basis` - data structure with the polynomial basis
-`collocation_size` - number of collocation points to use in the probability space
 `collocation_nodes` - set of nodes to perform the collocation with
-`collocation weights` - weights associated with the collocation nodes
+`collocation_weights` - set of weights for the collocation nodes
 """
-struct StochasticODEProblem{TB}
+struct StochasticODEProblem
     t_max::Real
-    basis_type::TB
-    basis_degree::Int
     basis
-    collocation_size::Int
-    collocation_nodes::Vector{Float64}
-    collocation_weights::Vector{Float64}
+    collocation_nodes
+    collocation_weights
+
+    function StochasticODEProblem(t_max, basis_type, basis_degree)
+        basis = basis_type(basis_degree)
+        collocation_nodes = basis_type(basis_degree + 1).quad.nodes
+        collocation_weights = basis_type(basis_degree + 1).quad.weights
+        return new(t_max, basis, collocation_nodes, collocation_weights)
+    end
 end
