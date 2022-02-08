@@ -26,8 +26,8 @@ function generate_collocation2(prob::StochasticODEProblem)
     for i = 1:size(prob.collocation_nodes)[1]
         # Set up the ODE
         f(u, p, t) = -p[1]*u
-        u0 = prob.collocation_nodes[i, 2]; tspan = (0., prob.t_max)
-        p = prob.collocation_nodes[i, 1]
+        u0 = prob.collocation_nodes[i][2]; tspan = (0., prob.t_max)
+        p = prob.collocation_nodes[i][1]
 
         # Solve the ODE
         ODEprob = ODEProblem(f, u0, tspan, [p])

@@ -32,5 +32,5 @@ function evaluate_basis(nodes, basis)
         Φ[:, i] = basis_element_at_nodes
     end
     
-    return Φ
+    return inds, Φ
 end

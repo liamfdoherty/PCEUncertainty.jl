@@ -3,12 +3,12 @@
 """
 function generate_pce_coefficients(prob::StochasticODEProblem, collocation_values; vandermonde = false)
     # Evaluate the orthogonal system of polynomials at the collocation nodes
-    Φⱼz = evaluate_basis(prob.collocation_nodes, prob.basis)
+    inds, Φⱼz = evaluate_basis(prob.collocation_nodes, prob.basis)
 
     # Normalize the orthogonal system
-    if typeof(prob.basis) <: MultiOrthoPoly
+    if length(prob.basis) > 1
         for row in 1:size(Φⱼz)[1]
-            Φⱼz[row, :] ./= sqrt(sum(Φⱼz[row, :] .* Φⱼz[row, :] .* prob.collocation_weights[:, 1] .* prob.collocation_weights[:, 2]))
+            Φⱼz[row, :] ./= sqrt(sum(Φⱼz[row, :] .* Φⱼz[row, :] .* [w[1]*w[2] for w in prob.collocation_weights]))
         end
     else
         for column in 1:size(Φⱼz)[2]
@@ -18,16 +18,16 @@ function generate_pce_coefficients(prob::StochasticODEProblem, collocation_value
 
     # Compute and return the PCE coefficients
     if vandermonde
-        if typeof(prob.basis) <: MultiOrthoPoly
+        if length(prob.basis) > 1
             v̂ = Φⱼz'\collocation_values # Artifact of the difference in how Φⱼz is stored for multivariate vs. univariate bases
         else
             v̂ = Φⱼz\collocation_values
         end
     else
-        if typeof(prob.basis) <: MultiOrthoPoly
+        if length(prob.basis) > 1
             v̂ = zeros(size(Φⱼz)[1])
             for (j, v̂ⱼ) in enumerate(v̂)
-                v̂[j] = sum(collocation_values .* Φⱼz[j, :] .* prob.collocation_weights[:, 1] .* prob.collocation_weights[:, 2])
+                v̂[j] = sum(collocation_values .* Φⱼz[j, :] .* [w[1]*w[2] for w in prob.collocation_weights])
             end
         else
             v̂ = zeros(size(Φⱼz)[2])

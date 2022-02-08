@@ -28,7 +28,7 @@ for num_points in 2:5
 
     # Compute and plot the interpolant
     v̂ = generate_pce_coefficients(prob, end_states)
-    Φⱼz = evaluate_basis(z_vals, prob.basis)
+    inds, Φⱼz = evaluate_basis(z_vals, prob.basis)
     for (n, column) in enumerate(1:size(Φⱼz)[2])
         Φⱼz[:, column] ./= sqrt(factorial(n - 1)) # Normalization for the Gaussian case
         # Φⱼz[:, column] .*= binomial(2*(n - 1), n - 1)*sqrt((2*n - 1)) # Normalization for the Uniform case

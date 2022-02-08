@@ -1,38 +1,34 @@
 function compute_integrals(quadrature_values, quadrature_weights, c::Real)
     @assert c > 0 "c must be greater than zero!"
     Λc = 0.
-    idx = 1
-    for i = 1:length(quadrature_weights[1, :])
-        for j = 1:length(quadrature_weights[2, :])
-            Λc += exp(c*quadrature_values[idx]) * quadrature_weights[1, i] * quadrature_weights[2, j]
-            idx += 1
-        end
+    for i = 1:length(quadrature_weights)
+        Λc += exp(c*quadrature_values[i]) * quadrature_weights[i][1] * quadrature_weights[i][2]
     end
     Λc = log(Λc)/c
 
     Λc¹ = 0.
-    idx = 1
-    for j = 1:length(quadrature_weights[2, :])
-        exponent = 0.
-        for i = 1:length(quadrature_weights[1, :])
-            exponent += c*quadrature_values[idx]*quadrature_weights[1, i]
-            idx += 1
-        end
-        Λc¹ += exp(exponent)*quadrature_weights[2, j]
-    end
-    Λc¹ = log(Λc¹)/c
+    # idx = 1
+    # for j = 1:length(quadrature_weights[2, :])
+    #     exponent = 0.
+    #     for i = 1:length(quadrature_weights[1, :])
+    #         exponent += c*quadrature_values[idx]*quadrature_weights[1, i]
+    #         idx += 1
+    #     end
+    #     Λc¹ += exp(exponent)*quadrature_weights[2, j]
+    # end
+    # Λc¹ = log(Λc¹)/c
 
     Λc² = 0.
-    idx = 1
-    for i = 1:length(quadrature_weights[1, :])
-        argument = 0.
-        for j = 1:length(quadrature_weights[2, :])
-            argument += exp(c*quadrature_values[idx])*quadrature_weights[2, j]
-            idx += 1
-        end
-        Λc² += log(argument)*quadrature_weights[1, i]
-    end
-    Λc² = Λc²/c
+    # idx = 1
+    # for i = 1:length(quadrature_weights[1, :])
+    #     argument = 0.
+    #     for j = 1:length(quadrature_weights[2, :])
+    #         argument += exp(c*quadrature_values[idx])*quadrature_weights[2, j]
+    #         idx += 1
+    #     end
+    #     Λc² += log(argument)*quadrature_weights[1, i]
+    # end
+    # Λc² = Λc²/c
 
     return Λc, Λc¹, Λc²
 end
