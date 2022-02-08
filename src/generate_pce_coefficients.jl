@@ -7,8 +7,8 @@ function generate_pce_coefficients(prob::StochasticODEProblem, collocation_value
 
     # Normalize the orthogonal system
     if length(prob.basis) > 1
-        for row in 1:size(Φⱼz)[1]
-            Φⱼz[row, :] ./= sqrt(sum(Φⱼz[row, :] .* Φⱼz[row, :] .* [w[1]*w[2] for w in prob.collocation_weights]))
+        for column in 1:size(Φⱼz)[2]
+            Φⱼz[:, column] ./= sqrt(sum(Φⱼz[:, column] .* Φⱼz[:, column] .* [w[1]*w[2] for w in prob.collocation_weights]))
         end
     else
         for column in 1:size(Φⱼz)[2]
@@ -18,11 +18,7 @@ function generate_pce_coefficients(prob::StochasticODEProblem, collocation_value
 
     # Compute and return the PCE coefficients
     if vandermonde
-        if length(prob.basis) > 1
-            v̂ = Φⱼz'\collocation_values # Artifact of the difference in how Φⱼz is stored for multivariate vs. univariate bases
-        else
-            v̂ = Φⱼz\collocation_values
-        end
+        v̂ = Φⱼz\collocation_values
     else
         if length(prob.basis) > 1
             v̂ = zeros(size(Φⱼz)[1])

@@ -7,7 +7,7 @@ using PCEUncertainty
 t_max = 1.
 basis_type = [Uniform01OrthoPoly, Uniform01OrthoPoly]; 
 F(x) = x^2; basis_degree = [1, 1]
-# F(x) = 0.8 ≤ x ≤ 1 ? 1 : 0; basis_degree = [11, 11]
+# F(x) = 0.8 ≤ x ≤ 1 ? 1 : 0; basis_degree = [2, 2]
 prob = StochasticODEProblem(t_max, basis_type, basis_degree)
 
 # Generate the collocation points
@@ -18,19 +18,18 @@ end_states = [sols[i].u[end] for i in 1:size(prob.collocation_nodes)[1]];
 end_states = F.(end_states) # Good to here
 F̂ = generate_pce_coefficients(prob, end_states, vandermonde = false)
 
-quadpoly = Uniform01OrthoPoly(2)
+quadpoly = Uniform01OrthoPoly(1)
 z₁_vals = quadpoly.quad.nodes; z₂_vals = quadpoly.quad.nodes
 z₁_weights = quadpoly.quad.weights; z₂_weights = quadpoly.quad.weights
 
 z_vals_components = [z₁_vals, z₂_vals]
 z_vals = [collect(z_val) for z_val in vec(collect(Iterators.product(z_vals_components...)))]
-z_vals = permutedims(hcat(z_vals...))
 z_weights = [z₁_weights, z₂_weights]
 z_weights = [collect(z_weight) for z_weight in vec(collect(Iterators.product(z_weights...)))]
 
-Φⱼz = evaluate(z_vals, prob.basis)' # Need to normalize this
+inds, Φⱼz = evaluate_basis(z_vals, prob.basis) # Need to normalize this
 for (j, col) in enumerate(1:size(Φⱼz)[2])
-    degs = prob.basis.ind[j, :] # degrees of polynomials in the tensor product for the jth basis element
+    degs = inds[j] # degrees of polynomials in the tensor product for the jth basis element
     Φⱼz[:, col] .*= binomial(2*degs[1], degs[1])*sqrt(2*degs[1] + 1)*binomial(2*degs[2], degs[2])*sqrt(2*degs[2] + 1) # This normalization is specific to U(0, 1)
 end
 F̃ = [dot(F̂, Φⱼz[row, :]) for row in 1:size(Φⱼz)[1]]

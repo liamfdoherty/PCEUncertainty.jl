@@ -6,8 +6,8 @@ using PCEUncertainty
 # Set up the StochasticODEProblem
 t_max = 1.
 basis_type = [Uniform01OrthoPoly, Uniform01OrthoPoly];
-# F(x) = x^2; basis_degree = [7, 7]
-F(x) = 0.8 ≤ x ≤ 1 ? 1 : 0; basis_degree = [11, 11]
+F(x) = x^2; basis_degree = [7, 7]
+# F(x) = 0.8 ≤ x ≤ 1 ? 1. : 0.; basis_degree = [11, 11]
 prob = StochasticODEProblem(t_max, basis_type, basis_degree)
 
 # Plot the true solution of the ODE
@@ -24,7 +24,7 @@ display(plt)
 
 # Compute the collocation solution for F
 end_states = F.(end_states)
-F̂ = generate_pce_coefficients(prob, end_states, vandermonde = false)
+F̂ = generate_pce_coefficients(prob, end_states, vandermonde = true)
 
 quadpoly = Uniform01OrthoPoly(2^8 - 1)
 z₁_vals = quadpoly.quad.nodes; z₂_vals = quadpoly.quad.nodes
@@ -32,10 +32,8 @@ z₁_weights = quadpoly.quad.weights; z₂_weights = quadpoly.quad.weights
 
 z_vals_components = [z₁_vals, z₂_vals]
 z_vals = [collect(z_val) for z_val in vec(collect(Iterators.product(z_vals_components...)))]
-# z_vals = permutedims(hcat(z_vals...))
 z_weights_components = [z₁_weights, z₂_weights]
 z_weights = [collect(z_weight) for z_weight in vec(collect(Iterators.product(z_weights_components...)))]
-# z_weights = permutedims(hcat(z_weights_components...))
 
 inds, Φⱼz = evaluate_basis(z_vals, prob.basis) # Need to normalize this
 for (j, col) in enumerate(1:size(Φⱼz)[2])
@@ -57,5 +55,5 @@ end
 plt2 = plot(c_vals, Λc_vals, title = "Λc values", xlabel = "c", label = "Λc", color = :red, legend = :outertopright)
 # plot!(c_vals, Λc¹_vals, label = "Λc¹", color = :green)
 # plot!(c_vals, Λc²_vals, label = "Λc²", color = :blue)
-ylims!(-0.5, 1.); yticks!(0.:0.1:1.)
+# ylims!(0., 1.); yticks!(0.:0.1:1.)
 display(plt2)
