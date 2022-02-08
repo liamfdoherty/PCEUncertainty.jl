@@ -3,7 +3,7 @@
 """
 function generate_pce_coefficients(prob::StochasticODEProblem, collocation_values; vandermonde = false)
     # Evaluate the orthogonal system of polynomials at the collocation nodes
-    Φⱼz = evaluate(prob.collocation_nodes, prob.basis)
+    Φⱼz = evaluate_basis(prob.collocation_nodes, prob.basis)
 
     # Normalize the orthogonal system
     if typeof(prob.basis) <: MultiOrthoPoly

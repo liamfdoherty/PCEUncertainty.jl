@@ -28,13 +28,13 @@ for num_points in 2:5
 
     # Compute and plot the interpolant
     v̂ = generate_pce_coefficients(prob, end_states)
-    Φⱼz = evaluate(z_vals, prob.basis)
+    Φⱼz = evaluate_basis(z_vals, prob.basis)
     for (n, column) in enumerate(1:size(Φⱼz)[2])
         Φⱼz[:, column] ./= sqrt(factorial(n - 1)) # Normalization for the Gaussian case
         # Φⱼz[:, column] .*= binomial(2*(n - 1), n - 1)*sqrt((2*n - 1)) # Normalization for the Uniform case
     end
     v = zeros(length(Φⱼz[:, 1]))
-    for i in 1:prob.basis.deg + 1
+    for i in 1:prob.basis[1].deg + 1
         v .+= v̂[i] .* Φⱼz[:, i]
     end
     plot!(z_vals, v, label = "Interpolated solution", color = :blue)
