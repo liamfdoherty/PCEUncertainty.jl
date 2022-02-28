@@ -1,7 +1,7 @@
 """
 `StochasticODEProblem` - structure to contain information about an ODE problem with random coefficient
 
-Fields:
+### Fields:
 `t_max` - end time for the ODE simulation
 `basis` - data structure with the polynomial basis
 `collocation_nodes` - set of nodes to perform the collocation with
@@ -33,11 +33,9 @@ struct StochasticODEProblem
         
         collocation_nodes_components = [higher_basis[i].quad.nodes for i ∈ 1:length(basis)]
         collocation_nodes = [collect(node) for node in vec(collect(Iterators.product(collocation_nodes_components...)))]
-        # collocation_nodes = permutedims(hcat(collocation_nodes...))
 
         collocation_weights_components = [higher_basis[i].quad.weights for i ∈ 1:length(basis)]
         collocation_weights = [collect(weight) for weight in vec(collect(Iterators.product(collocation_weights_components...)))]
-        # collocation_weights = permutedims(hcat(collocation_weights...))
         return new(t_max, basis, basis_degree, collocation_nodes, collocation_weights)
     end
 end

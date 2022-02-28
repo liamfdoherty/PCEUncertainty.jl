@@ -4,15 +4,13 @@ using PCEUncertainty
 
 # Set up the problem data structure
 t_max = 1.
-basis_type = GaussOrthoPoly # Gaussian measure
-# basis_type = Uniform01OrthoPoly # Uniform measure
+basis_type = GaussOrthoPoly
 
 # Plot the interpolant for degrees 2,3,4,5
 plots = []
 for num_points in 2:5
     # Plot the true solution
-    z_vals = LinRange(-3, 3, 100) # For Gaussian
-    # z_vals = LinRange(0, 1, 100) # For Uniform(0, 1)
+    z_vals = LinRange(-3, 3, 100)
     truth(x) = exp(-x)
     subplot = plot(z_vals, truth.(z_vals), title = "N = $(num_points)", label = "Truth", color = :green)
 
@@ -30,8 +28,7 @@ for num_points in 2:5
     v̂ = generate_pce_coefficients(prob, end_states)
     inds, Φⱼz = evaluate_basis(z_vals, prob.basis)
     for (n, column) in enumerate(1:size(Φⱼz)[2])
-        Φⱼz[:, column] ./= sqrt(factorial(n - 1)) # Normalization for the Gaussian case
-        # Φⱼz[:, column] .*= binomial(2*(n - 1), n - 1)*sqrt((2*n - 1)) # Normalization for the Uniform case
+        Φⱼz[:, column] ./= sqrt(factorial(n - 1))
     end
     v = zeros(length(Φⱼz[:, 1]))
     for i in 1:prob.basis[1].deg + 1

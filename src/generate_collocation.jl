@@ -1,5 +1,8 @@
 """
 `generate_collocation` - compute the solution to the ODE for a set of collocation points in the probability space
+
+### Fields:
+`prob` - data structure describing problem to be solved
 """
 function generate_collocation(prob::StochasticODEProblem)
     sols = []
@@ -18,10 +21,13 @@ function generate_collocation(prob::StochasticODEProblem)
 end
 
 """
-`generate_collocation2` - compute the solution to the ODE for a set of collocation points in the probability space; different from generate_collocation because this encodes
+`generate_collocation_2d` - compute the solution to the ODE for a set of collocation points in the probability space; different from generate_collocation because this encodes
 data about the underlying differential equation model.
+
+### Fields:
+`prob` - data structure describing problem to be solved
 """
-function generate_collocation2(prob::StochasticODEProblem)
+function generate_collocation_2d(prob::StochasticODEProblem)
     sols = []
     for i = 1:size(prob.collocation_nodes)[1]
         # Set up the ODE

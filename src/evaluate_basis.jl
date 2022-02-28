@@ -1,7 +1,7 @@
 """
 `evaluate_basis` - evaluate the polynomial basis (univariate or multivariate) at a vector of nodes and return a matrix with this information
 
-Fields:
+### Fields:
 `nodes` - set of nodes to evaluate the basis at
 `basis` - vector of (univariate) basis functions. If length(basis) == 1, then the basis is univariate. Otherwise, the basis is a multivariate basis
 constructed as a tensor product of univariate bases.

@@ -1,5 +1,10 @@
 """
 `generate_pce_coefficients` - compute the PCE coefficients for the orthogonal representation of the interpolant
+
+### Fields:
+`prob` - data structure describing problem to be solved
+`collocation_values` - values of the solution of the ODE problem at the collocation nodes
+`vandermonde` - whether or not to compute the PCE coefficients by inverting a Vandermonde matrix
 """
 function generate_pce_coefficients(prob::StochasticODEProblem, collocation_values; vandermonde = false)
     # Evaluate the orthogonal system of polynomials at the collocation nodes
@@ -23,7 +28,7 @@ function generate_pce_coefficients(prob::StochasticODEProblem, collocation_value
         if length(prob.basis) > 1
             v̂ = zeros(size(Φⱼz)[1])
             for (j, v̂ⱼ) in enumerate(v̂)
-                v̂[j] = sum(collocation_values .* Φⱼz[j, :] .* [w[1]*w[2] for w in prob.collocation_weights])
+                v̂[j] = sum(collocation_values .* Φⱼz[:, j] .* [w[1]*w[2] for w in prob.collocation_weights])
             end
         else
             v̂ = zeros(size(Φⱼz)[2])
