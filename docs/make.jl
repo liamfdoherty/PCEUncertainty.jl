@@ -1,5 +1,6 @@
 push!(LOAD_PATH,"../src/")
 using PCEUncertainty
+using Pkg; Pkg.add("Documenter")
 using Documenter
 makedocs(
          sitename = "PCEUncertainty.jl",
