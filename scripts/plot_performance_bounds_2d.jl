@@ -20,7 +20,8 @@ performance_bounds_Λc¹ = [B/c + Λc¹_vals[i] for (i, c) in enumerate(c_vals)]
 performance_bounds_Λc² = [B/c + Λc²_vals[i] for (i, c) in enumerate(c_vals)]
 
 # Plot performance bounds
-plt = plot(c_vals, performance_bounds_Λc, label = "Λc", title = "Performance Bounds", legend = :outertopright)
-plot!(c_vals, performance_bounds_Λc¹, label = "Λc¹")
-plot!(c_vals, performance_bounds_Λc², label = "Λc²")
+plt = plot(c_vals, performance_bounds_Λc, label = "B/c + Λc", title = "Performance Bounds", legend = :outertopright)
+plot!(c_vals, performance_bounds_Λc¹, label = "B/c + Λc¹")
+plot!(c_vals, performance_bounds_Λc², label = "B/c + Λc²")
+xlabel!("c")
 display(plt)
